@@ -3,55 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Update...</title>
+    <title>COIN Pvt. Ltd.</title>
     <style>
         body {
-            background-color: #0d0d0d;
-            color: #00ff41;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            height: 100vh;
+            background: #f8f8f8; /* Light background to make stamps visible */
             overflow: hidden;
+            position: relative;
         }
-        .container {
-            width: 80%;
-            max-width: 600px;
-        }
-        .line {
-            display: block;
-            overflow: hidden; 
-            white-space: nowrap; 
-            border-right: .15em solid orange; 
-            margin: 0 auto; 
-            letter-spacing: .15em; 
-            width: 0;
-            animation: typing 3s steps(40, end) forwards, blink-caret .75s step-end infinite;
-        }
-        .line-1 { animation-delay: 0s; }
-        .line-2 { border-right: none; width: 100%; opacity: 0; animation: fadeIn 0.5s forwards; animation-delay: 3.5s; }
-        .line-3 { border-right: none; width: 100%; opacity: 0; animation: fadeIn 0.5s forwards; animation-delay: 5s; margin-top: 20px; color: #fff;}
 
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100%; border-right-color: transparent; }
+        .stamp {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0) rotate(0deg);
+            animation: stampIn 1.2s ease-out forwards;
         }
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: orange; }
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
+
+        @keyframes stampIn {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-30deg);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.3) rotate(15deg);
+            }
+            100% {
+                opacity: var(--final-opacity, 0.7);
+                transform: scale(1) rotate(0deg);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <p class="line line-1">> Executing construction_protocols.exe...</p>
-        <p class="line line-2">> Progress: [||||||||||.....] 64%</p>
-        <p class="line line-3">We are currently refactoring reality. Check back soon.</p>
-    </div>
+    <!-- Hidden original logo image -->
+    <img id="logo-template" src="logo.png" alt="Logo" style="display: none;">
+
+    <script>
+        const logoSrc = document.getElementById('logo-template').src;
+
+        function createStamp() {
+            const stamp = document.createElement('img');
+            stamp.src = logoSrc;
+            stamp.className = 'stamp';
+
+            // Random size (80px to 250px width, aspect ratio preserved)
+            const size = Math.random() * 170 + 80;
+            stamp.style.width = size + 'px';
+
+            // Random final opacity for ink variation (0.4 to 0.8)
+            const finalOpacity = Math.random() * 0.4 + 0.4;
+            stamp.style.setProperty('--final-opacity', finalOpacity);
+
+            // Random position (keeps stamp fully visible)
+            const maxLeft = window.innerWidth - size;
+            const maxTop = window.innerHeight - size;
+            stamp.style.left = Math.random() * maxLeft + 'px';
+            stamp.style.top = Math.random() * maxTop + 'px';
+
+            // Slight random animation delay so they don't all start together
+            stamp.style.animationDelay = Math.random() * 0.3 + 's';
+
+            document.body.appendChild(stamp);
+        }
+
+        // Initial burst of stamps
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createStamp, i * 200);
+        }
+
+        // Continuous stamping with a semi-random fixed interval
+        setInterval(createStamp, Math.random() * 400 + 400);
+
+        // Clear ALL stamps every 60 seconds (page gets cleared after each minute)
+        setInterval(() => {
+            document.querySelectorAll('.stamp').forEach(stamp => {
+                stamp.remove();
+            });
+        }, 30000);
+
+        // Clean up on window resize (removes all stamps)
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.stamp').forEach(stamp => {
+                stamp.remove();
+            });
+        });
+    </script>
 </body>
 </html>
